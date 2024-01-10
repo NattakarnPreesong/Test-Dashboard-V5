@@ -18,7 +18,7 @@ async function seedUsers(client) {
         email TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         image_url VARCHAR(255) NOT NULL,
-        role_id VARCHAR(255) NOT NULL,
+        role VARCHAR(255) NOT NULL,
         date DATE NOT NULL
       );
     `;
@@ -30,8 +30,8 @@ async function seedUsers(client) {
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (id, name, email, password, image_url, role_id, date)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword},${user.image_url}, ${user.role_id}, ${user.date})
+        INSERT INTO users (id, name, email, password, image_url, role, date)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword},${user.image_url}, ${user.role}, ${user.date})
         ON CONFLICT (id) DO NOTHING;
       `;
       }),
