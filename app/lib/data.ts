@@ -11,24 +11,24 @@ import {
 import { formatCurrency } from './utils';
 
 export async function fetchRevenue() {
-  // Add noStore() here to prevent the response from being cached.
-  // This is equivalent to in fetch(..., {cache: 'no-store'}).
+  // เพิ่ม noStore() ที่นี่เพื่อป้องกันไม่ให้แคชการตอบสนอง
+  // สิ่งนี้เทียบเท่ากับ in fetch(..., {cache: 'no-store'})
 
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
+    // ชะลอการตอบสนองโดยไม่ตั้งใจเพื่อวัตถุประสงค์ในการสาธิต
+    // อย่าทำสิ่งนี้ในการผลิต :)
 
-    // console.log('Fetching revenue data...');
+    // console.log('กำลังเรียกข้อมูลรายได้...');
     // await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    // console.log('การดึงข้อมูลเสร็จสิ้นหลังจาก 3 วินาที');
 
     return data.rows;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
+    console.error('ฐานข้อมูลผิดพลาด:', error);
+    throw new Error('ดึงข้อมูลรายได้ไม่สำเร็จ');
   }
 }
 
@@ -47,16 +47,16 @@ export async function fetchLatestInvoices() {
     }));
     return latestInvoices;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest invoices.');
+    console.error('ฐานข้อมูลผิดพลาด:', error);
+    throw new Error('ดึงข้อมูลใบแจ้งหนี้ล่าสุดไม่สำเร็จ');
   }
 }
 
 export async function fetchCardData() {
   try {
-    // You can probably combine these into a single SQL query
-    // However, we are intentionally splitting them to demonstrate
-    // how to initialize multiple queries in parallel with JS.
+    // คุณอาจรวมสิ่งเหล่านี้ไว้ในแบบสอบถาม SQL เดียวได้
+    // อย่างไรก็ตาม เราตั้งใจแยกพวกมันออกเพื่อสาธิต
+    // วิธีเริ่มต้นการสืบค้นหลายรายการพร้อมกันกับ JS
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const invoiceStatusPromise = sql`SELECT
@@ -82,8 +82,8 @@ export async function fetchCardData() {
       totalPendingInvoices,
     };
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch card data.');
+    console.error('ฐานข้อมูลผิดพลาด:', error);
+    throw new Error('ดึงข้อมูลการ์ดไม่สำเร็จ');
   }
 }
 
@@ -118,8 +118,8 @@ export async function fetchFilteredInvoices(
 
     return invoices.rows;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoices.');
+    console.error('ฐานข้อมูลผิดพลาด:', error);
+    throw new Error('ดึงข้อมูลใบแจ้งหนี้ไม่สำเร็จ');
   }
 }
 
@@ -139,8 +139,8 @@ export async function fetchInvoicesPages(query: string) {
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of invoices.');
+    console.error('ฐานข้อมูลผิดพลาด:', error);
+    throw new Error('ไม่สามารถเรียกข้อมูลใบแจ้งหนี้ทั้งหมดได้');
   }
 }
 
@@ -158,14 +158,14 @@ export async function fetchInvoiceById(id: string) {
 
     const invoice = data.rows.map((invoice) => ({
       ...invoice,
-      // Convert amount from cents to dollars
+      // แปลงจำนวนเงินจากเซนต์เป็นดอลลาร์
       amount: invoice.amount / 100,
     }));
 
     return invoice[0];
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
+    console.error('ฐานข้อมูลผิดพลาด:', error);
+    throw new Error('ดึงข้อมูลใบแจ้งหนี้ไม่สำเร็จ');
   }
 }
 
@@ -182,8 +182,8 @@ export async function fetchCustomers() {
     const customers = data.rows;
     return customers;
   } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
+    console.error('ฐานข้อมูลผิดพลาด:', err);
+    throw new Error('ไม่สามารถดึงข้อมูลลูกค้าทั้งหมดได้');
   }
 }
 
@@ -215,8 +215,8 @@ export async function fetchFilteredCustomers(query: string) {
 
     return customers;
   } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch customer table.');
+    console.error('ฐานข้อมูลผิดพลาด:', err);
+    throw new Error('ดึงข้อมูลตารางลูกค้าไม่สำเร็จ');
   }
 }
 
@@ -225,7 +225,7 @@ export async function getUser(email: string) {
     const user = await sql`SELECT * FROM users WHERE email=${email}`;
     return user.rows[0] as User;
   } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    console.error('ไม่สามารถดึงข้อมูลผู้ใช้:', error);
+    throw new Error('ดึงข้อมูลผู้ใช้ไม่สำเร็จ');
   }
 }

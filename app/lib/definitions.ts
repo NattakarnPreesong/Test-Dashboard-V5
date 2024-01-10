@@ -1,12 +1,15 @@
-// This file contains type definitions for your data.
-// It describes the shape of the data, and what data type each property should accept.
-// For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
+// ไฟล์นี้มีคำจำกัดความประเภทข้อมูลของคุณ
+// อธิบายรูปร่างของข้อมูล และประเภทข้อมูลที่แต่ละคุณสมบัติควรยอมรับ
+// เพื่อความง่ายในการสอน เรากำลังกำหนดประเภทเหล่านี้ด้วยตนเอง
+// อย่างไรก็ตาม ประเภทเหล่านี้จะถูกสร้างขึ้นโดยอัตโนมัติหากคุณใช้ ORM เช่น Prisma
 export type User = {
   id: string;
   name: string;
   email: string;
   password: string;
+  image_url: string;
+  role: 'Admin' | 'Account' | 'Sell' | 'User';
+  date: string;
 };
 
 export type Customer = {
@@ -14,6 +17,7 @@ export type Customer = {
   name: string;
   email: string;
   image_url: string;
+  date: string;
 };
 
 export type Invoice = {
@@ -21,14 +25,15 @@ export type Invoice = {
   customer_id: string;
   amount: number;
   date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
+  // ใน TypeScript สิ่งนี้เรียกว่าประเภทสตริงยูเนียน
+  // หมายความว่าคุณสมบัติ "สถานะ" สามารถเป็นหนึ่งในสองสตริงเท่านั้น: 'รอดำเนินการ' หรือ 'ชำระเงิน'
   status: 'pending' | 'paid';
 };
 
 export type Revenue = {
   month: string;
   revenue: number;
+  date: string;
 };
 
 export type LatestInvoice = {
@@ -39,7 +44,7 @@ export type LatestInvoice = {
   amount: string;
 };
 
-// The database returns a number for amount, but we later format it to a string with the formatCurrency function
+// ฐานข้อมูลส่งคืนตัวเลขเป็นจำนวนเงิน แต่ต่อมาเราจะจัดรูปแบบให้เป็นสตริงด้วยฟังก์ชัน formatCurrency
 export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
   amount: number;
 };
